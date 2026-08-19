@@ -8,7 +8,7 @@ export interface ExamRecord {
   type: ExamType
   title: string
   totalMarks: number
-  examDate: string
+  examDate: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -27,7 +27,7 @@ export interface ExamResponse {
   type: ExamType
   title: string
   totalMarks: number
-  examDate: string
+  examDate: string | null
   createdAt: string
   updatedAt: string
   studentCount: number
@@ -40,7 +40,7 @@ export interface ExamMarksResponse {
   title: string
   type: ExamType
   totalMarks: number
-  examDate: string
+  examDate: string | null
   subject: string
   program: string
   semester: string
@@ -53,14 +53,14 @@ export interface CreateExamRequest {
   type: ExamType
   title: string
   totalMarks: number
-  examDate: string
+  examDate: string | null
 }
 
 export interface UpdateExamRequest {
   type?: ExamType
   title?: string
   totalMarks?: number
-  examDate?: string
+  examDate?: string | null
 }
 
 export interface SaveExamMarksRequest {

@@ -2,6 +2,7 @@ import { MESSAGES } from '../../constants/messages.js'
 import { ForbiddenError, NotFoundError, ConflictError } from '../../shared/ApiError.js'
 import { listAttendanceRecords } from '../attendance/attendance.repository.js'
 import { countEnrollmentsBySubject } from '../enrollments/enrollments.repository.js'
+import { createDefaultExamsForSubject } from '../exams/exams.service.js'
 import {
   createSubject as createSubjectRecord,
   deleteSubject as deleteSubjectRecord,
@@ -63,8 +64,11 @@ export const createSubject = async (
   if (existing) {
     throw new ConflictError(MESSAGES.SUBJECT_CODE_ALREADY_REGISTERED)
   }
-
-  const subject = await createSubjectRecord({ ...data, teacherId })
+  const subject = await createSubjectRecord({
+    ...data,
+    teacherId,
+  })
+  await createDefaultExamsForSubject(subject.id)
 
   return toSubjectResponse(subject, teacherId)
 }

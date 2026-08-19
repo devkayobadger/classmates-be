@@ -1,21 +1,8 @@
-import {
-  date,
-  integer,
-  pgEnum,
-  pgTable,
-  timestamp,
-  uuid,
-  text,
-} from 'drizzle-orm/pg-core'
+import { date, integer, pgEnum, pgTable, timestamp, uuid, text } from 'drizzle-orm/pg-core'
 
 import { subjects } from './subjects.js'
 
-export const examTypeEnum = pgEnum('exam_type', [
-  'unit-test',
-  'mid-term',
-  'pre-board',
-  'practical',
-])
+export const examTypeEnum = pgEnum('exam_type', ['unit-test', 'mid-term', 'pre-board', 'practical'])
 
 export const exams = pgTable('exams', {
   id: uuid('id').primaryKey(),
@@ -30,7 +17,7 @@ export const exams = pgTable('exams', {
 
   totalMarks: integer('total_marks').notNull(),
 
-  examDate: date('exam_date').notNull(),
+  examDate: date('exam_date'),
 
   createdAt: timestamp('created_at', {
     withTimezone: true,
