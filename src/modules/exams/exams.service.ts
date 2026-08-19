@@ -5,6 +5,7 @@ import {
   countEnteredMarksByExam,
   countStudentsByExam,
   createExam as createExamRecord,
+  createDefaultExams,
   findExamById,
   findExamStudents,
   findExamsByTeacher,
@@ -19,18 +20,13 @@ import type {
   SaveExamMarksRequest,
 } from './exams.types.js'
 
-const getExamStatus = (
-  entered: number,
-  total: number,
-): ExamStatus => {
+const getExamStatus = (entered: number, total: number): ExamStatus => {
   if (entered === 0) return 'not-started'
   if (entered === total) return 'marks-entered'
   return 'in-progress'
 }
 
-const toExamResponse = async (
-  exam: ExamRecord,
-): Promise<ExamResponse> => {
+const toExamResponse = async (exam: ExamRecord): Promise<ExamResponse> => {
   const [studentCount, enteredCount] = await Promise.all([
     countStudentsByExam(exam.id),
     countEnteredMarksByExam(exam.id),
@@ -51,10 +47,7 @@ const toExamResponse = async (
   }
 }
 
-const validateTotalMarks = (
-  type: CreateExamRequest['type'],
-  totalMarks: number,
-): void => {
+const validateTotalMarks = (type: CreateExamRequest['type'], totalMarks: number): void => {
   const expectedMarks: Record<CreateExamRequest['type'], number> = {
     'unit-test': 20,
     'mid-term': 60,
@@ -63,9 +56,7 @@ const validateTotalMarks = (
   }
 
   if (totalMarks !== expectedMarks[type]) {
-    throw new Error(
-      `${type} must have a total of ${expectedMarks[type]} marks`,
-    )
+    throw new Error(`${type} must have a total of ${expectedMarks[type]} marks`)
   }
 }
 
@@ -90,24 +81,19 @@ export const createExam = async (
     type: data.type,
     title: data.title,
     totalMarks: data.totalMarks,
-    examDate: data.examDate,
+    examDate: data.examDate ?? null,
   })
 
   return toExamResponse(exam)
 }
 
-export const listExams = async (
-  teacherId: string,
-): Promise<ExamResponse[]> => {
+export const listExams = async (teacherId: string): Promise<ExamResponse[]> => {
   const exams = await findExamsByTeacher(teacherId)
 
   return Promise.all(exams.map(toExamResponse))
 }
 
-export const getExam = async (
-  id: string,
-  teacherId: string,
-): Promise<ExamResponse> => {
+export const getExam = async (id: string, teacherId: string): Promise<ExamResponse> => {
   const exam = await findExamById(id)
 
   if (!exam) {
@@ -123,10 +109,7 @@ export const getExam = async (
   return toExamResponse(exam)
 }
 
-export const getExamMarks = async (
-  id: string,
-  teacherId: string,
-): Promise<ExamMarksResponse> => {
+export const getExamMarks = async (id: string, teacherId: string): Promise<ExamMarksResponse> => {
   const exam = await findExamById(id)
 
   if (!exam) {
@@ -142,17 +125,17 @@ export const getExamMarks = async (
   const students = await findExamStudents(id)
 
   return {
-  id: exam.id,
-  title: exam.title,
-  type: exam.type,
-  totalMarks: exam.totalMarks,
-  examDate: exam.examDate,
-  subject: subject.name,
-  program: subject.program ?? '',
-  semester: String(subject.semester),
-  dateLabel: exam.examDate,
-  students,
-}
+    id: exam.id,
+    title: exam.title,
+    type: exam.type,
+    totalMarks: exam.totalMarks,
+    examDate: exam.examDate,
+    subject: subject.name,
+    program: subject.program ?? '',
+    semester: String(subject.semester),
+    dateLabel: exam.examDate ?? '',
+    students,
+  }
 }
 
 export const saveExamMarks = async (
@@ -178,15 +161,13 @@ export const saveExamMarks = async (
     }
 
     if (entry.marks < 0 || entry.marks > exam.totalMarks) {
-      throw new Error(
-        `Marks for a student must be between 0 and ${exam.totalMarks}`,
-      )
+      throw new Error(`Marks for a student must be between 0 and ${exam.totalMarks}`)
     }
 
-    await upsertExamMark(
-      exam.id,
-      entry.studentId,
-      entry.marks,
-    )
+    await upsertExamMark(exam.id, entry.studentId, entry.marks)
   }
+}
+
+export const createDefaultExamsForSubject = async (subjectId: string): Promise<void> => {
+  await createDefaultExams(subjectId)
 }

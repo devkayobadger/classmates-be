@@ -50,6 +50,13 @@
       "when": 1786692798066,
       "tag": "0006_wandering_magik",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1787034083284,
+      "tag": "0007_nostalgic_black_knight",
+      "breakpoints": true
     }
   ]
 }

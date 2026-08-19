@@ -1,0 +1,1 @@
+ALTER TABLE "exams" ALTER COLUMN "exam_date" DROP NOT NULL;
