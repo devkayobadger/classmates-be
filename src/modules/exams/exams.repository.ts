@@ -37,7 +37,20 @@ export const createExam = async (data: {
 }
 
 export const createDefaultExams = async (subjectId: string): Promise<ExamRecord[]> => {
-  const values = DEFAULT_EXAMS.map((exam) => ({
+  const existingExams = await getDb()
+    .select()
+    .from(exams)
+    .where(eq(exams.subjectId, subjectId))
+
+  const existingTypes = new Set(existingExams.map((exam) => exam.type))
+
+  const missingExams = DEFAULT_EXAMS.filter((exam) => !existingTypes.has(exam.type))
+
+  if (missingExams.length === 0) {
+    return existingExams.map(toExamRecord)
+  }
+
+  const values = missingExams.map((exam) => ({
     id: randomUUID(),
     subjectId,
     type: exam.type,
@@ -48,7 +61,7 @@ export const createDefaultExams = async (subjectId: string): Promise<ExamRecord[
 
   const rows = await getDb().insert(exams).values(values).returning()
 
-  return rows.map(toExamRecord)
+  return [...existingExams.map(toExamRecord), ...rows.map(toExamRecord)]
 }
 
 export const findExamById = async (id: string): Promise<ExamRecord | null> => {

@@ -22,7 +22,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "start": "tsx src/server.ts",
-    "start:prod": "node dist/server.js"
+    "start:prod": "node dist/server.js",
+    "backfill:exams": "tsx scripts/backfill-default-exams.ts"
   },
   "lint-staged": {
     "*.{ts,js,mjs,cjs}": [
