@@ -8,6 +8,7 @@ import healthRoutes from './modules/health/health.routes.js'
 import studentRoutes from './modules/students/students.routes.js'
 import subjectRoutes from './modules/subjects/subjects.routes.js'
 import examRoutes from './modules/exams/exams.routes.js'
+import assignmentRoutes from './modules/assignments/assignments.routes.js'
 
 const router = Router()
 
@@ -19,5 +20,6 @@ router.use('/attendance', attendanceRoutes)
 router.use('/enrollments', enrollmentRoutes)
 router.use('/dashboard', dashboardRoutes)
 router.use('/exams', examRoutes)
+router.use('/assignments', assignmentRoutes)
 
 export default router

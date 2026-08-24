@@ -57,6 +57,13 @@
       "when": 1787034083284,
       "tag": "0007_nostalgic_black_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1787320196520,
+      "tag": "0008_safe_sunset_bain",
+      "breakpoints": true
     }
   ]
 }

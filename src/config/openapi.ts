@@ -1,4 +1,5 @@
 import '../modules/attendance/attendance.openapi.js'
+import '../modules/assignments/assignments.openapi.js'
 import '../modules/auth/auth.openapi.js'
 import '../modules/health/health.openapi.js'
 import '../modules/students/students.openapi.js'
